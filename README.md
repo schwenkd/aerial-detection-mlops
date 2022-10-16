@@ -1,2 +1,3 @@
 # aerial-detection-mlops
-A complete end-to-end MLOps pipeline used to build, deploy, monitor, improve, and scale a YOLOv7-based aerial object detection model chknbut
+ 
+go [here](http://ec2-18-220-127-248.us-east-2.compute.amazonaws.com:8000/docs)  to run inference  
