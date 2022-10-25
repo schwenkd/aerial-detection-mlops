@@ -4,6 +4,7 @@
 
     - Instantiate a p3.2xlarge EC2 box (for data-parallel training get p3.8xlarge box) with the following AMI:
         Deep Learning AMI GPU PyTorch 1.12.1 (Amazon Linux 2) 20221005
+    - Open ports 22, 80, 443, 800 from anywhere
     - AWS configure
     - conda activate pytorch
     - configure git if needed
