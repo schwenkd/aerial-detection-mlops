@@ -7,8 +7,8 @@ conda activate pytorch
 cd ./yolov7
 # num_freeze_layers=118 # corresponds to yolov7x
 # num_freeze_layers=59 # corresponds to yolov7x backbone
-#num_freeze_layers=102 # corresponds to yolov7
-num_freeze_layers=51 # corresponds to yolov7 backbone
+num_freeze_layers=102 # corresponds to yolov7
+#num_freeze_layers=51 # corresponds to yolov7 backbone
 num_epochs=5
 dataset_name="VisDrone2019-DET-YOLOv7"
 batch_size=8
