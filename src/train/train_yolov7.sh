@@ -9,9 +9,9 @@ cd ./yolov7
 # num_freeze_layers=59 # corresponds to yolov7x backbone
 #num_freeze_layers=102 # corresponds to yolov7
 num_freeze_layers=51 # corresponds to yolov7 backbone
-num_epochs=50
+num_epochs=100
 dataset_name="VisDrone2019-DET-YOLOv7"
-batch_size=24
+batch_size=32
 # weights_filename="yolov7x_training.pt"
 # cfg_filename="yolov7x.yaml"
 weights_filename="yolov7_training.pt"
