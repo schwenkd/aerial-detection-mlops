@@ -3,6 +3,7 @@ import cv2
 import os
 import random
 import csv
+import argparse
 
 def plot_one_box(x, image, color=None, label=None, line_thickness=None):
     # Plots one bounding box on image img
@@ -27,6 +28,7 @@ def draw_yolo_annotation_box_on_image(image_name, classes, colors, label_folder,
         image_path = os.path.join( raw_images_folder,'%s.jpg'%(image_name))   
         image = cv2.imread(image_path)    
         height, width, channels = image.shape
+        print("image shape = " + str(image.shape))
     except:
         print('no shape info.')
         return 0
@@ -34,7 +36,7 @@ def draw_yolo_annotation_box_on_image(image_name, classes, colors, label_folder,
     box_number = 0
     save_file_path = os.path.join(save_images_folder,'%s.jpg'%(image_name))
     source_file = open(txt_path)
-    reader_obj = csv.reader(source_file)
+    reader_obj = csv.reader(source_file, delimiter = " ")
     for line in reader_obj:
         staff = line
         # print(staff)
@@ -64,21 +66,24 @@ def make_name_list(raw_images_folder, name_list_path):
     text_image_name_list_file.close()
 
 
-if __name__ == '__main__':  
+if __name__ == '__main__':
+      
+    parser = argparse.ArgumentParser(description='Create a ArcHydro schema')
+    parser.add_argument('--label_folder', metavar='path', required=True,
+                        help='the path to labels')
+    parser.add_argument('--raw_images_folder', metavar='path', required=True,
+                        help='path to images')
+    parser.add_argument('--save_images_folder', metavar='path', required=True,
+                        help='path to folder where annotated images will be saved')
+    args = parser.parse_args()
     
-    # VisDrone YOLOv7 annotations folder
-    label_folder = './VisDroneVideo/VisDrone2019-VID-YOLOv7/val/annotations'
 
-    # VisDrone YOLOv7 images folder
-    raw_images_folder = './VisDroneVideo/VisDrone2019-VID-YOLOv7/val/images' 
-
-    save_images_folder = './YOLOv7_Annotated_Images/'
-
+    label_folder = args.label_folder
+    raw_images_folder = args.raw_images_folder
+    save_images_folder = args.save_images_folder
+    classes_path = './MLOps4-Capstone/src/yolo_data_utils/visdrone_classes.txt'
     name_list_path = './name_list.txt'
-
-    classes_path = './visdrone_classes.txt'
-
-    make_name_list(raw_images_folder, name_list_path)
+    make_name_list(args.raw_images_folder, name_list_path)
     if not os.path.exists(save_images_folder):
         os.makedirs(save_images_folder)
 
@@ -93,4 +98,4 @@ if __name__ == '__main__':
         box_num = draw_yolo_annotation_box_on_image(image_name, classes, colors, label_folder, raw_images_folder, save_images_folder) 
         box_total += box_num
         image_total += 1
-        print('Box number:', box_total, 'Image number:',image_total)
+        # print('Box number:', box_total, 'Image number:',image_total)
