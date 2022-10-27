@@ -18,13 +18,13 @@ from utils.torch_utils import select_device, load_classifier, time_synchronized,
 
 
 
-def detect(source, output):
+def detect(source, output, model_weights = 'yolov7.pt', image_size = 640):
 #   source, weights, view_img, save_txt, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
     # source = 'inference/images/horses.jpg'
-    weights = 'yolov7.pt'
+    weights = model_weights
     view_img = False
     save_txt = True
-    imgsz = 640
+    imgsz = image_size
     trace = False
     save_img = True    
     device = 'cpu'

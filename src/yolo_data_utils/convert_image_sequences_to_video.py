@@ -2,12 +2,21 @@ import os
 from pathlib import Path
 import shutil
 import cv2
+from yolov7.detect_fastapi import detect
 
 class ImageSequenceToVideoConverter:
     def __init__(self):
         print("Initialize the new instance of ImageSequenceToVideoConverter.")
-
-    def convert_image_sequences_to_mp4_video(image_sequence_folder, output_mp4_video_folder, new_image_size,  fps =10.0):
+    
+    def get_yolov7_annotated_image(self, filename, input_img):
+        input_file_save_location = f"tmp/inference/input/{filename}"
+        output_file_save_location = input_file_save_location.replace('/input/', '/output/')
+        cv2.imwrite(input_file_save_location, input_img)
+        detect(input_file_save_location, output_file_save_location, model_weights = '../ae-yolov7-best.pt', image_size=960)
+        output_image = cv2.imread(output_file_save_location)
+        return output_image
+   
+    def convert_image_sequences_to_mp4_video(self, image_sequence_folder, output_mp4_video_folder, new_image_size,  fps =10.0):
         """
         Converts image sequences into an mp4 video
         Args:
@@ -45,7 +54,9 @@ class ImageSequenceToVideoConverter:
                 resized_image = cv2.resize(img, new_image_size)       
                 try:
                     ## we can send the resized_image to YOLOv7 model here to doo real-time object detection
-                    out.write(resized_image)
+                    file_name = os.path.basename(img_file)
+                    yolov7_img = self.get_yolov7_annotated_image(file_name, resized_image)
+                    out.write(yolov7_img)
                 except:
                     print("cannot write {} to: {}".format(img_file, video_outpt_filename))
             out.release()
