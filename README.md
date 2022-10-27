@@ -22,7 +22,7 @@
         - cd VisDrone
         - aws s3 cp s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-train.zip VisDrone2019-DET-train.zip
         - aws s3 cp s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-val.zip VisDrone2019-DET-val.zip
-        - aws s3 cp s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-train.zip VisDrone2019-DET-train.zip
+        - aws s3 cp s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-test-dev.zip VisDrone2019-DET-test-dev.zip
         - unzip -d . VisDrone2019-DET-val.zip
         - unzip -d . VisDrone2019-DET-train.zip
         - unzip -d . VisDrone2019-DET-test-dev.zip
@@ -51,7 +51,7 @@
 </details>
 
 <details>
-    <summary> Step-3: Do the training </summary>
+    <summary> Step-3: Training YOLOv7 </summary>
 
         - git clone https://github.com/schwenkd/aerial-detection-mlops.git
         - cd aerial-detection-mlops
@@ -66,6 +66,19 @@
         - unzip -d . VisDrone2019-VID-YOLOv7.zip
         - cd ..
         - bash ./src/train/train_yolov7.sh
+        - Save the best model to s3:
+                 aws s3 sync ./exp11 s3://aerial-detection-mlops4/model/Visdrone/Yolov7/<yyyyMMdd>/<run_name>
 
+
+</details>
+<details>
+    <summary> Step-4: Inferencing </summary>
+
+        - cd yolov7
+        - aws s3 cp s3://aerial-detection-mlops4/model/Visdrone/Yolov7/20221026/exp11/weights/best.pt ae-yolov7-best.pt
+        - python3 detect.py --weights ae-yolov7-best.pt --conf 0.4 --img-size 640 --source ../9999938_00000_d_0000208.jpg
+        - python3 detect.py --weights ae-yolov7-best.pt --conf 0.25 --img-size 640 --source yourvideo.mp4
+        ### load the file to s3
+        - aws s3 cp runs/detect/exp2/9999938_00000_d_0000208.jpg s3://aerial-detection-mlops4/inferencing/test.jpg
 
 </details>
