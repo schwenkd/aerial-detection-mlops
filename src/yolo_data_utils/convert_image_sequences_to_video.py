@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import shutil
 import cv2
+import ../../yolov7 as yolov7
 from yolov7.detect_fastapi import detect
 
 class ImageSequenceToVideoConverter:
