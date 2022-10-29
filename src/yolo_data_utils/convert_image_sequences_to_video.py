@@ -71,8 +71,8 @@ class ImageSequenceToVideoConverter:
                 except:
                     print("cannot write {} to: {}".format(img_file, video_outpt_filename))
                     traceback.print_exc()
-                if i > 20:
-                    break
+                #if i > 20:
+                    #break
                 i = i + 1
             out.release()
         # print(image_size_dict)
