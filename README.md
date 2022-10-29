@@ -82,3 +82,20 @@
         - aws s3 cp runs/detect/exp2/9999938_00000_d_0000208.jpg s3://aerial-detection-mlops4/inferencing/test.jpg
 
 </details>
+<details>
+    <summary> Step-4.1: Create YOLOv7 object-detection mp4 Video from VisDrone-VID-Sequence files </summary>
+
+        - go to aerial-detection-mlops directoru
+        - git pull https://github.com/schwenkd/aerial-detection-mlops.git
+        - create directories: "inferencing/video/input/" and "inferencing/video/output/"
+        - go to "aerial-detection-mlops/inferencing/video/input/" folder
+        - aws s3 cp  s3://aerial-detection-mlops4/data/visdrone/raw-data/Video/VisDrone2019-VID-test-challenge.zip VisDrone2019-VID-test-challenge.zip
+        - unzip -d . VisDrone2019-VID-test-challenge.zip
+        - go back to aerial-detection-mlops/yolov7 directory
+        - python3 ../src/yolo_data_utils/convert_image_sequences_to_video.py --image_sequence_folder ../inferencing/video/input/VisDrone2019-VID-test-challenge/sequences
+           --output_mp4_video_folder ../inferencing/video/output --output_image_size "(960,544)" --fps 10
+        - go to  "aerial-detection-mlops/inferencing/video/output/" and execute the following command
+        - aws s3 cp uav0000006_06900_v.mp4 s3://deepak-mlops4-dev/capstone/deleteit/uav0000006_06900_v.mp4
+
+</details>
+
