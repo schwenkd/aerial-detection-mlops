@@ -5,8 +5,8 @@ import cv2
 import argparse
 from types import new_class
 import sys
-# sys.path.extend(['/home/ec2-user/aerial-detection-mlops/yolov7'])
-#print(sys.path)
+sys.path.extend(['/home/ec2-user/aerial-detection-mlops/yolov7'])
+print(sys.path)
 from detect_fastapi import detect
 
 class ImageSequenceToVideoConverter:
