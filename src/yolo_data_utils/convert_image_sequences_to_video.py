@@ -15,8 +15,8 @@ class ImageSequenceToVideoConverter:
         print("Initialize the new instance of ImageSequenceToVideoConverter.")
     
     def get_yolov7_annotated_image(self, input_save_directory, output_save_directory, filename, input_img):
-        input_file_save_location = f"input_save_directory/{filename}"
-        output_file_save_location = f"output_save_directory/{filename}"
+        input_file_save_location = f"{input_save_directory}/{filename}"
+        output_file_save_location = f"{output_save_directory}/{filename}"
         cv2.imwrite(input_file_save_location, input_img)
         detect(input_file_save_location, output_file_save_location, model_weights = 'ae-yolov7-best.pt', image_size=960)
         output_image = cv2.imread(output_file_save_location)
@@ -57,6 +57,8 @@ class ImageSequenceToVideoConverter:
             out = cv2.VideoWriter(video_outpt_filename, fourcc, fps =fps, frameSize = new_image_size)
             input_file_save_directory = f"tmp/inference/input/{video_outpt_filename}"
             output_file_save_directory = input_file_save_directory.replace('/input/', '/output/')
+            Path(input_file_save_directory).mkdir(parents=True, exist_ok=True)
+            Path(output_file_save_directory).mkdir(parents=True, exist_ok=True)
             for img_num, img_file in images_dict.items():
                 # print(str(Path(image_filepath_dir)/image_name))
                 img = cv2.imread(img_file)
