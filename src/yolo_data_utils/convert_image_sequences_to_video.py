@@ -2,18 +2,22 @@ import os
 from pathlib import Path
 import shutil
 import cv2
-import ../../yolov7 as yolov7
-from yolov7.detect_fastapi import detect
+import argparse
+from types import new_class
+import sys
+# sys.path.extend(['/home/ec2-user/aerial-detection-mlops/yolov7'])
+#print(sys.path)
+from detect_fastapi import detect
 
 class ImageSequenceToVideoConverter:
     def __init__(self):
         print("Initialize the new instance of ImageSequenceToVideoConverter.")
     
-    def get_yolov7_annotated_image(self, filename, input_img):
-        input_file_save_location = f"tmp/inference/input/{filename}"
-        output_file_save_location = input_file_save_location.replace('/input/', '/output/')
+    def get_yolov7_annotated_image(self, input_save_directory, output_save_directory, filename, input_img):
+        input_file_save_location = f"input_save_directory/{filename}"
+        output_file_save_location = f"output_save_directory/{filename}"
         cv2.imwrite(input_file_save_location, input_img)
-        detect(input_file_save_location, output_file_save_location, model_weights = '../ae-yolov7-best.pt', image_size=960)
+        detect(input_file_save_location, output_file_save_location, model_weights = 'ae-yolov7-best.pt', image_size=960)
         output_image = cv2.imread(output_file_save_location)
         return output_image
    
@@ -32,9 +36,11 @@ class ImageSequenceToVideoConverter:
         """
         # init paths/folders    
         Path(output_mp4_video_folder).mkdir(parents=True, exist_ok=True)
-        
+        i = 0
         video_sequence_directories = [x for x in Path(image_sequence_folder).iterdir() if x.is_dir()]
         for video_sequence_directory in video_sequence_directories:
+            if i > 1:
+                break
             images_dict = {}
             print(video_sequence_directory)
             image_filepath_list = os.listdir(video_sequence_directory)
@@ -48,7 +54,8 @@ class ImageSequenceToVideoConverter:
             fourcc = cv2.VideoWriter_fourcc(*'MP4V')
             video_outpt_filename = str(Path(output_mp4_video_folder)/(os.path.basename(os.path.normpath(video_sequence_directory)) + ".mp4"))
             out = cv2.VideoWriter(video_outpt_filename, fourcc, fps =fps, frameSize = new_image_size)
-            
+            input_file_save_directory = f"tmp/inference/input/{video_outpt_filename}"
+            output_file_save_directory = input_file_save_directory.replace('/input/', '/output/')
             for img_num, img_file in images_dict.items():
                 # print(str(Path(image_filepath_dir)/image_name))
                 img = cv2.imread(img_file)
@@ -56,12 +63,33 @@ class ImageSequenceToVideoConverter:
                 try:
                     ## we can send the resized_image to YOLOv7 model here to doo real-time object detection
                     file_name = os.path.basename(img_file)
-                    yolov7_img = self.get_yolov7_annotated_image(file_name, resized_image)
+                    yolov7_img = self.get_yolov7_annotated_image(input_file_save_directory, output_file_save_directory, file_name, resized_image)
                     out.write(yolov7_img)
                 except:
                     print("cannot write {} to: {}".format(img_file, video_outpt_filename))
+                if i > 20:
+                    break
+                i = i + 1
             out.release()
         # print(image_size_dict)
+
+def image_size_type(strings):
+    strings = strings.replace("(", "").replace(")", "")
+    mapped_int = map(int, strings.split(","))
+    return tuple(mapped_int)
+
 if __name__ == '__main__':
+    #image_sequence_folder, output_mp4_video_folder, new_image_size,  fps
+    parser = argparse.ArgumentParser(description='Create a ArcHydro schema')
+    parser.add_argument('--image_sequence_folder', metavar='path', required=True, help='the path to image sequences')
+    parser.add_argument('--output_mp4_video_folder', metavar='path', required=True, help='path to images')
+    parser.add_argument('--output_image_size', type=image_size_type, metavar='path', required=True, help='the size of the image:(px width x px height)')                    
+    parser.add_argument('--fps', metavar='path', type=int, required=True, help='fps of the output video')
+
+    args = parser.parse_args()
+    image_sequence_folder = args.image_sequence_folder
+    output_mp4_video_folder = args.output_mp4_video_folder
+    image_size = tuple(args.output_image_size)
+    new_fps = args.fps *1.0
     converter = ImageSequenceToVideoConverter()
-    converter.convert_image_sequences_to_mp4_video('/content/VisDroneVideo/VisDrone2019-VID-test-challenge/sequences', "/content/VisDroneVideo/VisDrone2019-VID-test-challenge/mp4_videos", new_image_size =(960,544), fps =10.0)
+    converter.convert_image_sequences_to_mp4_video(image_sequence_folder, output_mp4_video_folder, new_image_size =image_size, fps =new_fps)
