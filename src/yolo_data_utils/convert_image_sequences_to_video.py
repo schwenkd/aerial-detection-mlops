@@ -4,6 +4,7 @@ import shutil
 import cv2
 import argparse
 from types import new_class
+import traceback
 import sys
 sys.path.extend(['/home/ec2-user/aerial-detection-mlops/yolov7'])
 print(sys.path)
@@ -67,6 +68,7 @@ class ImageSequenceToVideoConverter:
                     out.write(yolov7_img)
                 except:
                     print("cannot write {} to: {}".format(img_file, video_outpt_filename))
+                    traceback.print_exc()
                 if i > 20:
                     break
                 i = i + 1
