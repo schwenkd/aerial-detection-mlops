@@ -1,0 +1,12 @@
+[core]
+    remote = yolov7_det_data
+['remote "yolov7_det_data"']
+    url = s3://aerial-detection-mlops4/data/visdrone/yolov7-data/DET/VisDrone2019-DET-YOLOv7.zip
+['remote "raw_data_det_train"']
+    url = s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-train.zip
+['remote "raw_data_det_val"']
+    url = s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-val.zip
+['remote "raw_data_det_test-dev"']
+    url = s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-test-dev.zip
+['remote "raw_data_det_test-challenge"']
+    url = s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-test-challenge.zip

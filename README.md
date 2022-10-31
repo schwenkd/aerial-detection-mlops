@@ -98,4 +98,18 @@
         - aws s3 cp uav0000006_06900_v.mp4 s3://deepak-mlops4-dev/capstone/deleteit/uav0000006_06900_v.mp4
 
 </details>
+<details>
+    <summary> Step-5: Integrating DVC </summary>
 
+        - yum install pip
+        - pip3 install dvc
+        - dvc init
+        - dvc remote add yolov7_det_data s3://aerial-detection-mlops4/data/visdrone/yolov7-data/DET/VisDrone2019-DET-YOLOv7.zip
+        - dvc remote add raw_data_det_train s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-train.zip
+        - dvc remote add raw_data_det_val s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-val.zip
+        - dvc remote add raw_data_det_test-dev s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-test-dev.zip
+        - dvc remote add raw_data_det_test-challenge s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-test-challenge.zip
+        - dvc add .
+        - git commit -m "dvc init"
+
+</details>
