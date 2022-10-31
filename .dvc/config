@@ -1,0 +1,2 @@
+['remote "storage"']
+    url = s3://aerial-detection-mlops4/data/visdrone/yolov7-data/DET/VisDrone2019-DET-YOLOv7.zip
