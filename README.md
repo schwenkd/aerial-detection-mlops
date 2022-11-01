@@ -98,6 +98,7 @@
         - aws s3 cp uav0000006_06900_v.mp4 s3://deepak-mlops4-dev/capstone/deleteit/uav0000006_06900_v.mp4
 
 </details>
+
 <details>
     <summary> Step-5: Integrating DVC </summary>
 
@@ -112,4 +113,12 @@
         - dvc add .
         - git commit -m "dvc init"
 
+</details>
+
+<details>
+    <summary> Step-6: Lambda Function </summary>
+        - created Lambda function aerial-detection-mlops-lambda
+        - IAM role used is aerial-detection-mlops-lambda-role
+        - the function is triggered whenever we drop a file in s3://aerial-detection-mlops4/inferencing/photos/input folder
+        - this function will call a detection-service that will inturn call the triton server
 </details>

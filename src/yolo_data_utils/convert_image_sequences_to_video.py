@@ -8,17 +8,19 @@ import traceback
 import sys
 sys.path.extend(['/home/ec2-user/aerial-detection-mlops/yolov7'])
 print(sys.path)
-from detect_fastapi import detect
+import detect_fastapi_v2
+
 
 class ImageSequenceToVideoConverter:
     def __init__(self):
         print("Initialize the new instance of ImageSequenceToVideoConverter.")
+        self.model = detect_fastapi_v2.Yolov7Detect(model_weights = 'ae-yolov7-best.pt', device = 'cpu')
     
     def get_yolov7_annotated_image(self, input_save_directory, output_save_directory, filename, input_img):
         input_file_save_location = f"{input_save_directory}/{filename}"
         output_file_save_location = f"{output_save_directory}/{filename}"
         cv2.imwrite(input_file_save_location, input_img)
-        detect(input_file_save_location, output_file_save_location, model_weights = 'ae-yolov7-best.pt', image_size=960)
+        self.model.detect(input_file_save_location, output_file_save_location, image_size=960)
         output_image = cv2.imread(output_file_save_location)
         return output_image
    
