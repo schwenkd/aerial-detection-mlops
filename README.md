@@ -117,6 +117,7 @@
 
 <details>
     <summary> Step-6: Lambda Function </summary>
+    
         - created Lambda function aerial-detection-mlops-lambda
         - IAM role used is aerial-detection-mlops-lambda-role
         - the function is triggered whenever we drop a file in s3://aerial-detection-mlops4/inferencing/photos/input folder
