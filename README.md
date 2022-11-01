@@ -123,3 +123,23 @@
         - the function is triggered whenever we drop a file in s3://aerial-detection-mlops4/inferencing/photos/input folder
         - this function will call a detection-service that will inturn call the triton server
 </details>
+
+<details>
+    <summary> Step-7: Deploy on Nvidia Triton Inference Server </summary>
+
+    ## Step 7.1: Export model to TensorRT via ONNX
+
+        - bring in model weights
+        - clone and switch to pytorch conda env, pip install -r requirements.txt and pip install onnx-simplifier
+        # export model to onnx
+        - python export.py --weights ./ae-yolov7-best.pt --grid --end2end --dynamic-batch --simplify --topk-all 100 --iou-thres 0.65 --conf-thres 0.35 --img-size 640 640
+        # run nvidia TensorRT container from https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorrt
+        - docker run -it --rm --gpus=all nvcr.io/nvidia/tensorrt:22.06-py3
+        # copy onnx model into container
+        - docker cp ae-yolov7-best.onnx <container-id>:/workspace/
+        # run trtexec to export model as TensorRT engine
+        - ./tensorrt/bin/trtexec --onnx=ae-yolov7-best.onnx --minShapes=images:1x3x640x640 --optShapes=images:8x3x640x640 --maxShapes=images:8x3x640x640 --fp16 --workspace=4096 --saveEngine=ae-yolov7-best-fp16-1x8x8.engine --timingCacheFile=timing.cache
+        # test
+        - ./tensorrt/bin/trtexec --loadEngine=ae-yolov7-best-fp16-1x8x8.engine
+        # copy engine to host
+        - docker cp <container-id>:/workspace/ae-yolov7-best-fp16-1x8x8.engine .

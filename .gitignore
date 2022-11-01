@@ -1,3 +1,9 @@
+# ml model weights
+*.pt
+*.onnx
+*.engine
+*.ptl
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
