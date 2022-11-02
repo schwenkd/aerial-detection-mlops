@@ -44,6 +44,8 @@
     - unzip -d . VisDrone2019-VID-train.zip
     - unzip -d . VisDrone2019-VID-test-dev.zip
     - unzip -d . VisDrone2019-VID-val.zip
+    - mkdir VisDrone2019-VID-val
+	- mv annotations images VisDrone2019-VID-val
     - cd /home/ec2-user/aerial-detection-mlops        
     - python3 ./src/yolo_data_utils/convert_visdrone_VID_data_to_yolov7.py --output_image_size "(960, 544)"
     - aws s3 cp VisDrone2019-VID-YOLOv7.zip s3://aerial-detection-mlops4/data/visdrone/yolov7-data/Video/VisDrone2019-DET-YOLOv7.zip
