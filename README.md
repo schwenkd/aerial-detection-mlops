@@ -18,6 +18,7 @@
 
         - git clone https://github.com/schwenkd/aerial-detection-mlops.git
         - cd aerial-detection-mlops
+        - pip3 install -r requirements.txt
         - mkdir VisDrone
         - cd VisDrone
         - aws s3 cp s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-train.zip VisDrone2019-DET-train.zip
