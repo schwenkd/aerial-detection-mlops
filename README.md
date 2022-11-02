@@ -43,8 +43,10 @@ Deep Learning AMI GPU PyTorch 1.12.1 (Amazon Linux 2) 20221005
 - aws s3 cp s3://aerial-detection-mlops4/data/visdrone/raw-data/Video/VisDrone2019-VID-val.zip VisDrone2019-VID-val.zip
 - unzip -d . VisDrone2019-VID-train.zip
 - unzip -d . VisDrone2019-VID-test-dev.zip
-- unzip -d . VisDrone2019-VID-val.zip
-- cd /home/ec2-user/aerial-detection-mlops        
+- unzip -d . VisDrone2019-VID-val.zip  
+- mkdir -r VisDrone2019-VID-val/annotations
+- mkdir -r VisDrone2019-VID-val/sequences
+- cd ..
 - python3 ./src/yolo_data_utils/convert_visdrone_VID_data_to_yolov7.py --output_image_size "(960, 544)"
 - ? is this supposed to be here? aws s3 cp VisDrone2019-VID-YOLOv7.zip s3://aerial-detection-mlops4/data/visdrone/yolov7-data/Video/VisDrone2019-DET-YOLOv7.zip
 - You can cleanup the VisDrone directory by deleting all the zip files containing the raw data.
@@ -61,8 +63,6 @@ Deep Learning AMI GPU PyTorch 1.12.1 (Amazon Linux 2) 20221005
 - unzip -d . VisDrone2019-DET-YOLOv7.zip
 - aws s3 cp s3://aerial-detection-mlops4/data/visdrone/yolov7-data/Video/VisDrone2019-VID-YOLOv7.zip VisDrone2019-VID-YOLOv7.zip
 - unzip -d . VisDrone2019-VID-YOLOv7.zip
-- mkdir -r VisDrone/VisDrone2019-VID-val/annotations
-- mkdir - rVisDrone/VisDrone2019-VID-val/sequences
 - cd ..
 - bash ./src/train/train_yolov7.sh
 - Save the best model to s3:
