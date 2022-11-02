@@ -61,6 +61,8 @@ Deep Learning AMI GPU PyTorch 1.12.1 (Amazon Linux 2) 20221005
 - unzip -d . VisDrone2019-DET-YOLOv7.zip
 - aws s3 cp s3://aerial-detection-mlops4/data/visdrone/yolov7-data/Video/VisDrone2019-VID-YOLOv7.zip VisDrone2019-VID-YOLOv7.zip
 - unzip -d . VisDrone2019-VID-YOLOv7.zip
+- mkdir -r VisDrone/VisDrone2019-VID-val/annotations
+- mkdir - rVisDrone/VisDrone2019-VID-val/sequences
 - cd ..
 - bash ./src/train/train_yolov7.sh
 - Save the best model to s3:
