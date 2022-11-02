@@ -59,11 +59,11 @@ Deep Learning AMI GPU PyTorch 1.12.1 (Amazon Linux 2) 20221005
 - git clone https://github.com/ultralytics/yolov5.git
 - pip3 install -r yolov5/requirements.txt 
 - cd VisDrone
-- aws s3 cp s3://aerial-detection-mlops4/data/visdrone/yolov7-data/DET/VisDrone2019-DET-YOLOv7.zip VisDrone2019-DET-YOLOv7.zip
-- unzip -d . VisDrone2019-DET-YOLOv7.zip
-- aws s3 cp s3://aerial-detection-mlops4/data/visdrone/yolov7-data/Video/VisDrone2019-VID-YOLOv7.zip VisDrone2019-VID-YOLOv7.zip
-- unzip -d . VisDrone2019-VID-YOLOv7.zip
-- cd ..
+- ? is this supposed to be here? aws s3 cp s3://aerial-detection-mlops4/data/visdrone/yolov7-data/DET/VisDrone2019-DET-YOLOv7.zip VisDrone2019-DET-YOLOv7.zip
+- ? is this supposed to be here? unzip -d . VisDrone2019-DET-YOLOv7.zip
+- ? is this supposed to be here? aws s3 cp s3://aerial-detection-mlops4/data/visdrone/yolov7-data/Video/VisDrone2019-VID-YOLOv7.zip VisDrone2019-VID-YOLOv7.zip
+- ? is this supposed to be here? unzip -d . VisDrone2019-VID-YOLOv7.zip
+- ? is this supposed to be here? cd ..
 - bash ./src/train/train_yolov7.sh
 - Save the best model to s3:
 	 aws s3 sync ./exp11 s3://aerial-detection-mlops4/model/Visdrone/Yolov7/<yyyyMMdd>/<run_name>
