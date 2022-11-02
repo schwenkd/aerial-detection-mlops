@@ -6,7 +6,7 @@
 Deep Learning AMI GPU PyTorch 1.12.1 (Amazon Linux 2) 20221005
 - Open ports 22, 80, 443, 8000-8002 from anywhere
 - AWS configure
-- conda activate pytorch
+- source activate pytorch
 - configure git if needed
 - initialize wandb
 
@@ -18,7 +18,7 @@ Deep Learning AMI GPU PyTorch 1.12.1 (Amazon Linux 2) 20221005
 
 - git clone https://github.com/schwenkd/aerial-detection-mlops.git
 - cd aerial-detection-mlops
-- pip3 install -r requirements.txt
+- pip3 install -r yolov7/requirements.txt
 - mkdir VisDrone
 - cd VisDrone
 - aws s3 cp s3://aerial-detection-mlops4/data/visdrone/raw-data/DET/VisDrone2019-DET-train.zip VisDrone2019-DET-train.zip
