@@ -36,9 +36,6 @@
 
     ## Step-2.2: Convert VisDrone VID data
 
-        - git clone https://github.com/schwenkd/aerial-detection-mlops.git
-        - cd aerial-detection-mlops
-        - mkdir VisDrone
         - cd VisDrone
         - aws s3 cp s3://aerial-detection-mlops4/data/visdrone/raw-data/Video/VisDrone2019-VID-train.zip VisDrone2019-VID-train.zip
         - aws s3 cp s3://aerial-detection-mlops4/data/visdrone/raw-data/Video/VisDrone2019-VID-test-dev.zip VisDrone2019-VID-test-dev.zip
