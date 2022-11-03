@@ -64,6 +64,13 @@ Deep Learning AMI GPU PyTorch 1.12.1 (Amazon Linux 2) 20221005
 - ? is this supposed to be here? aws s3 cp s3://aerial-detection-mlops4/data/visdrone/yolov7-data/Video/VisDrone2019-VID-YOLOv7.zip VisDrone2019-VID-YOLOv7.zip
 - ? is this supposed to be here? unzip -d . VisDrone2019-VID-YOLOv7.zip
 - ? is this supposed to be here? cd ..
+- use vim on ./src/train/train_yolo7.sh, and make sure you are running the right line. Are you on one GPU? Then don't run the distributed one.
+	- in case you messed up above, you might need to remove the cached data, ala 
+```
+	rm ./aerial-detection-mlops/VisDrone/VisDrone2019-DET-YOLOv7/train/labels.cache  
+	rm ./aerial-detection-mlops/VisDrone/VisDrone2019-DET-YOLOv7/val/labels.cache
+```
+
 - bash ./src/train/train_yolov7.sh
 - Save the best model to s3:
 	 aws s3 sync ./exp11 s3://aerial-detection-mlops4/model/Visdrone/Yolov7/<yyyyMMdd>/<run_name>
