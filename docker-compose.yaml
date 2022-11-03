@@ -1,0 +1,26 @@
+version: '3'
+#Direct the main healthcheck to port 8000
+#Direct yolov5h to port 8001
+services:
+   
+  main-service:
+    build: .
+    ports:
+      - 8000:8000
+    depends_on:
+      - yolov5-service
+    platform: linux/amd64
+
+  yolov5-service:
+    build: ./yolov5
+    ports:
+      - 8001:8000
+    platform: linux/amd64
+
+  triton-container:
+    env_file:
+      .env
+    image: nvcr.io/nvidia/tritonserver:22.06-py3
+    command: ["tritonserver", "--model-repository=s3://matt-week-05/models/"]
+    ports:
+      - 8002:8000
