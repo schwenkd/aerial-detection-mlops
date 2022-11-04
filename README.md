@@ -129,17 +129,46 @@
 
     ## Step 7.1: Export model to TensorRT via ONNX
 
-        - bring in model weights
-        - clone and switch to pytorch conda env, pip install -r requirements.txt and pip install onnx-simplifier
-        # export model to onnx
-        - python export.py --weights ./ae-yolov7-best.pt --grid --end2end --dynamic-batch --simplify --topk-all 100 --iou-thres 0.65 --conf-thres 0.35 --img-size 640 640
-        # run nvidia TensorRT container from https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorrt
-        - docker run -it --rm --gpus=all nvcr.io/nvidia/tensorrt:22.06-py3
+        # Note - this should be performed on the platform that inference will occur on, because TensorRT conversion applies graph optimization using kernels specific to the GPU
+        # bring in model weights
+        # clone and switch to pytorch conda env, pip install -r requirements.txt and pip install onnx-simplifier
+        # export model to onnx with grid, EfficientNMS plugin, and dynamic batch size (only img size changed from yolov7 instructions)
+        - python export.py --weights ./ae-yolov7-best.pt --grid --end2end --dynamic-batch --simplify --topk-all 100 --iou-thres 0.65 --conf-thres 0.35 --img-size 960 960
+        - if there is an error stating that the  onnx runtime module missing, pip install onnxruntime and/or onnxruntime-gpu
+        # run appropriate nvidia TensorRT container from https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorrt
+        - our AMI uses CUDA 11.6.1, so we use 22.02
+        - docker run -it --rm --gpus=all nvcr.io/nvidia/tensorrt:22.02-py3
         # copy onnx model into container
         - docker cp ae-yolov7-best.onnx <container-id>:/workspace/
-        # run trtexec to export model as TensorRT engine
-        - ./tensorrt/bin/trtexec --onnx=ae-yolov7-best.onnx --minShapes=images:1x3x640x640 --optShapes=images:8x3x640x640 --maxShapes=images:8x3x640x640 --fp16 --workspace=4096 --saveEngine=ae-yolov7-best-fp16-1x8x8.engine --timingCacheFile=timing.cache
+        # run trtexec to export model as TensorRT engine with FP16 precision, min batch 1, opt batch 8, and max batch 8
+        - ./tensorrt/bin/trtexec --onnx=ae-yolov7-best.onnx --minShapes=images:1x3x960x960 --optShapes=images:8x3x960x960 --maxShapes=images:8x3x960x960 --fp16 --workspace=4096 --saveEngine=ae-yolov7-best-fp16-1x8x8.engine --timingCacheFile=timing.cache
         # test
         - ./tensorrt/bin/trtexec --loadEngine=ae-yolov7-best-fp16-1x8x8.engine
+        # results will look like:
+                    [11/07/2022-14:36:36] [I] === Performance summary ===
+            [11/07/2022-14:36:36] [I] Throughput: 125.089 qps
+            [11/07/2022-14:36:36] [I] Latency: min = 8.86523 ms, max = 9.88672 ms, mean = 9.21912 ms, median = 9.27188 ms, percentile(99%) = 9.76582 ms
+            [11/07/2022-14:36:36] [I] End-to-End Host Latency: min = 8.93781 ms, max = 16.664 ms, mean = 15.7417 ms, median = 15.7519 ms, percentile(99%) = 16.513 ms
+            [11/07/2022-14:36:36] [I] Enqueue Time: min = 1.20361 ms, max = 1.46375 ms, mean = 1.26678 ms, median = 1.26025 ms, percentile(99%) = 1.41699 ms
+            [11/07/2022-14:36:36] [I] H2D Latency: min = 1.00757 ms, max = 1.90149 ms, mean = 1.25755 ms, median = 1.33453 ms, percentile(99%) = 1.61914 ms
+            [11/07/2022-14:36:36] [I] GPU Compute Time: min = 7.82544 ms, max = 8.35481 ms, mean = 7.94364 ms, median = 7.93091 ms, percentile(99%) = 8.3118 ms
+            [11/07/2022-14:36:36] [I] D2H Latency: min = 0.00976562 ms, max = 0.112427 ms, mean = 0.0179271 ms, median = 0.015625 ms, percentile(99%) = 0.0512238 ms
+            [11/07/2022-14:36:36] [I] Total Host Walltime: 3.02184 s
+            [11/07/2022-14:36:36] [I] Total GPU Compute Time: 3.00269 s
         # copy engine to host
         - docker cp <container-id>:/workspace/ae-yolov7-best-fp16-1x8x8.engine .
+
+    ## Step 7.2 Run on Triton Inference Server
+
+        # Create triton deploy folder structure
+        # Move TensorRT model to triton directory and rename as "model.plan"
+        - mv ae-yolov7-best-fp16-1x8x8.engine triton-deploy/models/ae-yolov7-best/1/model.plan
+        # create and configure triton-deploy/models/yolov7/config.pbtxt
+            name: "ae-yolov7-best"
+            platform: "tensorrt_plan"
+            max_batch_size: 8
+            dynamic_batching { }
+        # Start triton inference server (from yolov7 directory)
+        - again make sure to use the correct triton server image for your version of CUDA and TensorRT. We are using CUDA 11.6.1 and TensorRT 8.2.3, so need Triton Server 22.02
+        - docker run --gpus all --rm --ipc=host --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -p8000:8000 -p8001:8001 -p8002:8002 -v$(pwd)/triton-deploy/models:/models nvcr.io/nvidia/tritonserver:22.02-py3 tritonserver --model-repository=/models --strict-model-config=false --log-verbose 1
+
