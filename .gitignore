@@ -3,6 +3,7 @@
 *.onnx
 *.engine
 *.ptl
+*.plan
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
