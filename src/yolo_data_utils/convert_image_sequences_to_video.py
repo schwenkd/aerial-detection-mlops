@@ -94,7 +94,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_mp4_video_folder', metavar='path', required=True, help='path to images')
     parser.add_argument('--output_image_size', type=image_size_type, metavar='path', required=True, help='the size of the image:(px width x px height)')                    
     parser.add_argument('--fps', metavar='path', type=int, required=True, help='fps of the output video')
-    parser.add_argument('--draw_bounding_box', action="store_true", default=False, required=False, help='fps of the output video')
+    parser.add_argument('--draw_bounding_box', action="store_true", default=False, required=False, help='whether to draw_bounding_box')
     args = parser.parse_args()
     image_sequence_folder = args.image_sequence_folder
     output_mp4_video_folder = args.output_mp4_video_folder

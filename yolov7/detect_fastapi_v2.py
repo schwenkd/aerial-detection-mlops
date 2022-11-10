@@ -22,7 +22,7 @@ class Yolov7Detect:
         # Initialize
         set_logging()
         self.device = select_device(device)
-        self.half = device.type != 'cpu'  # half precision only supported on CUDA
+        self.half = False #device.type != 'cpu'  # half precision only supported on CUDA
 
         # Load model
         self.model = attempt_load(self.weights, map_location=device)  # load FP32 model
