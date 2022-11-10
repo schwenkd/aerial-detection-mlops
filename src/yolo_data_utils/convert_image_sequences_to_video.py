@@ -24,7 +24,7 @@ class ImageSequenceToVideoConverter:
         output_image = cv2.imread(output_file_save_location)
         return output_image
    
-    def convert_image_sequences_to_mp4_video(self, image_sequence_folder, output_mp4_video_folder, new_image_size,  fps =10.0):
+    def convert_image_sequences_to_mp4_video(self, image_sequence_folder, output_mp4_video_folder, new_image_size,  draw_bounding_box, fps =10.0):
         """
         Converts image sequences into an mp4 video
         Args:
@@ -42,8 +42,8 @@ class ImageSequenceToVideoConverter:
         i = 0
         video_sequence_directories = [x for x in Path(image_sequence_folder).iterdir() if x.is_dir()]
         for video_sequence_directory in video_sequence_directories:
-            if i > 1:
-                break
+            # if i > 1:
+                # break
             images_dict = {}
             print(video_sequence_directory)
             image_filepath_list = os.listdir(video_sequence_directory)
@@ -64,15 +64,18 @@ class ImageSequenceToVideoConverter:
             for img_num, img_file in images_dict.items():
                 # print(str(Path(image_filepath_dir)/image_name))
                 img = cv2.imread(img_file)
-                resized_image = cv2.resize(img, new_image_size)       
-                try:
-                    ## we can send the resized_image to YOLOv7 model here to doo real-time object detection
-                    file_name = os.path.basename(img_file)
-                    yolov7_img = self.get_yolov7_annotated_image(input_file_save_directory, output_file_save_directory, file_name, resized_image)
-                    out.write(yolov7_img)
-                except:
-                    print("cannot write {} to: {}".format(img_file, video_outpt_filename))
-                    traceback.print_exc()
+                resized_image = cv2.resize(img, new_image_size)
+                if draw_bounding_box:       
+                    try:
+                        ## we can send the resized_image to YOLOv7 model here to doo real-time object detection
+                        file_name = os.path.basename(img_file)
+                        yolov7_img = self.get_yolov7_annotated_image(input_file_save_directory, output_file_save_directory, file_name, resized_image)
+                        out.write(yolov7_img)
+                    except:
+                        print("cannot write {} to: {}".format(img_file, video_outpt_filename))
+                        traceback.print_exc()
+                else:
+                    out.write(resized_image)
                 #if i > 20:
                     # break
                 i = i + 1
@@ -91,11 +94,12 @@ if __name__ == '__main__':
     parser.add_argument('--output_mp4_video_folder', metavar='path', required=True, help='path to images')
     parser.add_argument('--output_image_size', type=image_size_type, metavar='path', required=True, help='the size of the image:(px width x px height)')                    
     parser.add_argument('--fps', metavar='path', type=int, required=True, help='fps of the output video')
-
+    parser.add_argument('--draw_bounding_box', action="store_true", default=False, required=False, help='fps of the output video')
     args = parser.parse_args()
     image_sequence_folder = args.image_sequence_folder
     output_mp4_video_folder = args.output_mp4_video_folder
     image_size = tuple(args.output_image_size)
     new_fps = args.fps *1.0
+    draw_bounding_box = args.draw_bounding_box
     converter = ImageSequenceToVideoConverter()
-    converter.convert_image_sequences_to_mp4_video(image_sequence_folder, output_mp4_video_folder, new_image_size =image_size, fps =new_fps)
+    converter.convert_image_sequences_to_mp4_video(image_sequence_folder, output_mp4_video_folder, new_image_size =image_size, draw_bounding_box = draw_bounding_box, fps =new_fps)
