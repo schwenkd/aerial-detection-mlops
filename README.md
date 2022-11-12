@@ -171,4 +171,18 @@
         # Start triton inference server (from yolov7 directory)
         - again make sure to use the correct triton server image for your version of CUDA and TensorRT. We are using CUDA 11.6.1 and TensorRT 8.2.3, so need Triton Server 22.02
         - docker run --gpus all --rm --ipc=host --shm-size=1g --ulimit memlock=-1 --ulimit stack=67108864 -p8000:8000 -p8001:8001 -p8002:8002 -v$(pwd)/triton-deploy/models:/models nvcr.io/nvidia/tritonserver:22.02-py3 tritonserver --model-repository=/models --strict-model-config=false --log-verbose 1
+    
+    ## Step 7.3 Prometheus and Grafana
+
+        # based on this repo: https://github.com/Einsteinish/Docker-Compose-Prometheus-and-Grafana
+        # in the prometheus-grafana directory run docker-compose up -d
+        # grafana: http://<host-ip>:3000 and login with user admin password admin
+        # prometheus: http://<host-ip>:9090
+        # add this block to prometheus.yml:
+              - job_name: 'triton-SERVER'
+                scrape_interval: 10s
+                static_configs:
+                - targets: ['localhost:8002']
+
+
 
