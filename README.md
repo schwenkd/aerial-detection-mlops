@@ -47,6 +47,13 @@
         - python3 ./src/yolo_data_utils/convert_visdrone_VID_data_to_yolov7.py --output_image_size "(960, 544)"
         - aws s3 cp VisDrone2019-VID-YOLOv7.zip s3://aerial-detection-mlops4/data/visdrone/yolov7-data/Video/VisDrone2019-DET-YOLOv7.zip
         - You can cleanup the VisDrone directory by deleting all the zip files containing the raw data.
+    
+    ## Step-2.3 Data Version Control
+
+        - pip install dvc (added to requirements.txt)
+        - dvc init
+        - dvc remote add -d storage s3://aerial-detection-mlops4/data/
+        - 
 
 </details>
 
@@ -183,6 +190,8 @@
                 scrape_interval: 10s
                 static_configs:
                 - targets: ['localhost:8002']
+    
+
 
 
 
