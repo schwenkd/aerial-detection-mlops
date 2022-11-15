@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Aerial Detection AI App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .hero-image {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("/static/images/drones-over-nyc-van-gogh.png");
+            background-color: #cccccc;
+            height: 100vh;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+        }
+
+        .hero-text {
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+        }
+
+        input[type=file] {
+            /* width: 100%; */
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: block;
+            width: 300px;
+            color: white;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;            
+            box-sizing: border-box;
+            border-style: solid rgb(255, 255, 255);            
+            border-width: 2px;
+            border-radius: 2px;
+        }
+        input[type=file]::file-selector-button {
+            border: 1px solid #010008;
+            padding: .2em .4em;
+            border-radius: .2em;
+            width: 100px;
+            height: 27px;
+            background-color: #fbfafc;
+            transition: 1s;
+        }
+        input[type=file]::file-selector-button:hover {
+            background: #F8A64B
+        }
+
+        input[type=submit] {            
+            width: 100%;
+            padding: 12px 10px;
+            margin: 8px 0;
+            display: block;
+            width: 110px;
+            height: 45px;
+            font-size: 1.0em;
+            color: white;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            background-color: #E07000;
+            border-radius: 4px;
+            transition: 1s;
+        }
+        input[type=submit]:hover {
+            background: #C35B06
+        }
+        input[type=submit]:focus {
+            outline: 1px solid rgb(24, 1, 1);
+            outline-offset: -4px;
+        }
+        .bottomright {
+            position: fixed;
+            right: 0px; bottom: 0px;
+            width: 372px;
+            height:262px;
+            /* background-color:lightblue; */
+            padding: 5px;
+        }
+        .topleft{
+            position: fixed;
+            left: 0px; top: 0px;
+            width: 372px;
+            height:262px;
+            /* background-color:lightblue; */
+            padding: 5px;
+        }
+        .large {
+            width: 2000px; height: 500px;
+            background-color: lightgray;
+        }
+        .fb-logo{
+            width : 372px;
+            height: auto;
+        }
+        /* .hero-form {
+            font-size: 14px;
+            background-color: #F0AD4E;
+            border-radius: 0;
+        }   */
+    </style>
+</head>
+
+<body>
+
+    <div class="hero-image">
+        <div class="hero-text">
+            <img src="/static/images/aerial-detection-logo-gold.png" alt="Aerial Detection MLOps">
+            <!-- <img src="banner_orange.png" alt="OCT Image Diagnostics"> -->
+            <br></br>
+            <br></br>          
+            <!-- <h4>Upload Aerial Image! </h4> -->
+            
+            <form method='post' enctype=multipart/form-data>
+                <h4 style="color: #f3ecea">Upload file (only .jpg or .mp4) for Aerial Object Detection!</h4>
+                <input type="file" name="file">
+                <input type="submit" value="Upload">
+            </form>
+        </div>
+        <div class="bottomright">
+            <img src="/static/images/Fourthbrain-removebg-preview.png" alt="FourthBrain:  MLOps4/Capstone Project">            
+        </div>
+    </div>
+</body>
+
+</html>

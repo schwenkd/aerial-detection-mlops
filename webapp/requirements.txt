@@ -1,0 +1,6 @@
+Flask
+boto3
+gunicorn
+python-multipart
+requests
+opencv-python-headless

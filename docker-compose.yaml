@@ -1,0 +1,59 @@
+version: "3.5"
+services:
+  main:
+    build:
+      context: ./
+      dockerfile: Dockerfile      
+    ports:
+      - "8004:8000"
+    depends_on:
+      - inference-service
+      - triton
+      # - webapp
+  inference-service:
+    build:
+      context: ./inference_service
+    environment:
+      - AWS_PROFILE=default
+    volumes:
+      - ~/.aws/:/root/.aws:ro        
+    ports:
+      - "8005:8000"
+    depends_on:
+      - triton
+  webapp:
+    build:
+      context: ./webapp
+    environment:
+      - AWS_PROFILE=default
+    volumes:
+      - ~/.aws/:/root/.aws:ro
+    ports:
+      - "8006:8080"
+  triton:
+    image: nvcr.io/nvidia/tritonserver:22.02-py3
+    runtime: nvidia
+    env_file:
+      - .aws.env
+    ports:
+      # part 8000 http, 8001 GRPC, 8002 Metric Service
+      - "8000:8000" 
+      - "8001:8001"
+      - "8002:8002"
+    command:
+      [
+        "tritonserver",
+        "--model-repository=s3://aerial-detection-mlops4/model/Visdrone/Yolov7/triton-deploy/models/",
+        "--strict-model-config=false"
+      ]
+    shm_size: 2g
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
