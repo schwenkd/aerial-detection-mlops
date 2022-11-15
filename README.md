@@ -132,9 +132,10 @@ Deep Learning AMI GPU PyTorch 1.12.1 (Amazon Linux 2) 20221005
 - this function will call a detection-service that will inturn call the triton server
 </details>
 
-##
+<br/>
+
 ## B. Running the Aerial-Object Detection Application
-### 
+
 <details>
     <summary> Convert PyTorch Model to TensorRT Format </summary>
 
@@ -186,9 +187,18 @@ dynamic_batching { }
 - aws s3 sync triton-deploy s3://aerial-detection-mlops4/model/Visdrone/Yolov7/triton-deploy
 
 </details>
-
-### Running Docker Compose
+<details>
+<summary> Running Application using Docker-Compose</summary>
 
 - Run all the endpoints (`docker-compose -f docker-compose.yaml up --build`)
 - GO to the main website (<http://ec2.ip.address:8006>)
+</details>
 
+<br/>
+
+## C. Running Prometheus-Grafana Monitoring Service
+
+
+- cd to prometheus-and-grafana directory
+- run 'docker-compose up -d' command
+- to stop, run 'docker-compose down' command
