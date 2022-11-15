@@ -1,4 +1,6 @@
 # Aerial-Detection-MLOps
+
+## A. Preparing VisDrone dataset for fine-tuning YOLOv7 Object Detection model
 <details>
     <summary> Step-1: Setup an EC2 box for Training </summary>
 
@@ -130,7 +132,8 @@ Deep Learning AMI GPU PyTorch 1.12.1 (Amazon Linux 2) 20221005
 - this function will call a detection-service that will inturn call the triton server
 </details>
 
-## Running the application
+##
+## B. Running the Aerial-Object Detection Application
 ### 
 <details>
     <summary> Convert PyTorch Model to TensorRT Format </summary>
@@ -184,7 +187,7 @@ dynamic_batching { }
 
 </details>
 
-## Docker Compose
+### Running Docker Compose
 
 - Run all the endpoints (`docker-compose -f docker-compose.yaml up --build`)
 - GO to the main website (<http://ec2.ip.address:8006>)
